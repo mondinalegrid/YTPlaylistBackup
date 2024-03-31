@@ -5,6 +5,8 @@ Public Class Database
     Public Shared Property playlistListData As New DataTable
     Public Shared Property playlistItemListData As New DataTable
     Public Shared Property playlistItemListRecoveredData As New DataTable
+    Public Shared Property playlistItemListRemovedData As New DataTable
+    Public Shared Property playlistItemListLostData As New DataTable
 #End Region
 
 #Region "Variables"
@@ -13,6 +15,8 @@ Public Class Database
 
 #Region "Sub/Func"
     Public Shared Sub InitDatatables()
+        playlistListData.Clear()
+        playlistListData.AcceptChanges()
         If playlistListData.Columns.Count = 0 Then
             playlistListData.Columns.Add("playlistID", GetType(String))
             playlistListData.Columns.Add("title", GetType(String))
@@ -20,6 +24,8 @@ Public Class Database
             playlistListData.Columns.Add("itemCount", GetType(Integer))
         End If
 
+        playlistItemListData.Clear()
+        playlistItemListData.AcceptChanges()
         If playlistItemListData.Columns.Count = 0 Then
             playlistItemListData.Columns.Add("playlistID", GetType(String))
             playlistItemListData.Columns.Add("videoID", GetType(String))
@@ -29,6 +35,8 @@ Public Class Database
             playlistItemListData.Columns.Add("videoOwnerChannelTitle", GetType(String))
         End If
 
+        playlistItemListRecoveredData.Clear()
+        playlistItemListRecoveredData.AcceptChanges()
         If playlistItemListRecoveredData.Columns.Count = 0 Then
             playlistItemListRecoveredData.Columns.Add("playlistID", GetType(String))
             playlistItemListRecoveredData.Columns.Add("videoID", GetType(String))
@@ -36,6 +44,28 @@ Public Class Database
             playlistItemListRecoveredData.Columns.Add("description", GetType(String))
             playlistItemListRecoveredData.Columns.Add("videoOwnerChannelId", GetType(String))
             playlistItemListRecoveredData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+        End If
+
+        playlistItemListRemovedData.Clear()
+        playlistItemListRemovedData.AcceptChanges()
+        If playlistItemListRemovedData.Columns.Count = 0 Then
+            playlistItemListRemovedData.Columns.Add("playlistID", GetType(String))
+            playlistItemListRemovedData.Columns.Add("videoID", GetType(String))
+            playlistItemListRemovedData.Columns.Add("title", GetType(String))
+            playlistItemListRemovedData.Columns.Add("description", GetType(String))
+            playlistItemListRemovedData.Columns.Add("videoOwnerChannelId", GetType(String))
+            playlistItemListRemovedData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+        End If
+
+        playlistItemListLostData.Clear()
+        playlistItemListLostData.AcceptChanges()
+        If playlistItemListLostData.Columns.Count = 0 Then
+            playlistItemListLostData.Columns.Add("playlistID", GetType(String))
+            playlistItemListLostData.Columns.Add("videoID", GetType(String))
+            playlistItemListLostData.Columns.Add("title", GetType(String))
+            playlistItemListLostData.Columns.Add("description", GetType(String))
+            playlistItemListLostData.Columns.Add("videoOwnerChannelId", GetType(String))
+            playlistItemListLostData.Columns.Add("videoOwnerChannelTitle", GetType(String))
         End If
     End Sub
 #End Region
@@ -122,6 +152,59 @@ Public Class Database
         objconnection.Close()
     End Sub
 
+    Public Shared Sub GetSqlPlaylistItemsRemovedList()
+        Dim c As New SqlCommand
+        Dim dr As SqlDataReader
+        Try
+            If objconnection.State = ConnectionState.Closed Then
+                objconnection.Open()
+            End If
+            With c
+                .Connection = objconnection
+                .CommandText = "SELECT * from PlaylistItemsRemoved ORDER BY id"
+                .CommandType = CommandType.Text
+                dr = .ExecuteReader
+            End With
+            If playlistItemListRemovedData.Rows.Count > 0 AndAlso dr.HasRows Then
+                playlistItemListRemovedData.Rows.Clear()
+                playlistItemListRemovedData.AcceptChanges()
+            End If
+            While dr.Read
+                playlistItemListRemovedData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6))
+            End While
+            playlistItemListRemovedData.AcceptChanges()
+            dr.Close()
+        Catch ex As Exception
+        End Try
+        objconnection.Close()
+    End Sub
+
+    Public Shared Sub GetSqlPlaylistItemsLostList()
+        Dim c As New SqlCommand
+        Dim dr As SqlDataReader
+        Try
+            If objconnection.State = ConnectionState.Closed Then
+                objconnection.Open()
+            End If
+            With c
+                .Connection = objconnection
+                .CommandText = "SELECT * from PlaylistItemsLost ORDER BY id"
+                .CommandType = CommandType.Text
+                dr = .ExecuteReader
+            End With
+            If playlistItemListLostData.Rows.Count > 0 AndAlso dr.HasRows Then
+                playlistItemListLostData.Rows.Clear()
+                playlistItemListLostData.AcceptChanges()
+            End If
+            While dr.Read
+                playlistItemListLostData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6))
+            End While
+            playlistItemListLostData.AcceptChanges()
+            dr.Close()
+        Catch ex As Exception
+        End Try
+        objconnection.Close()
+    End Sub
 #End Region
 
 #Region "Insert"
