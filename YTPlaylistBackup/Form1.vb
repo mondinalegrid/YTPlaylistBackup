@@ -45,6 +45,8 @@ Public Class Form1
             Database.GetSqlPlaylistItemsLostList()
             SetDGVData()
 
+            SetComboboxValues()
+
             MsgBox("Sync Completed")
             ToolStripButton3.Enabled = True
         End If
