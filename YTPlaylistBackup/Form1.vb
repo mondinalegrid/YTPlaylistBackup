@@ -24,6 +24,7 @@ Public Class Form1
         Database.GetSqlPlaylistItemsRecoveredList()
         Database.GetSqlPlaylistItemsRemovedList()
         Database.GetSqlPlaylistItemsLostList()
+        Database.GetSqlSyncHistory()
         SetDGVData()
 
         SetComboboxValues()
@@ -43,6 +44,7 @@ Public Class Form1
             Database.GetSqlPlaylistItemsRecoveredList()
             Database.GetSqlPlaylistItemsRemovedList()
             Database.GetSqlPlaylistItemsLostList()
+            Database.GetSqlSyncHistory()
             SetDGVData()
 
             SetComboboxValues()
@@ -126,6 +128,12 @@ Public Class Form1
 
     Private Sub GetPlaylistItemLists()
         Dim playlistItemsCache As New Dictionary(Of String, String)
+
+        Dim AddedCount = 0
+        Dim RemovedCount = 0
+        Dim RecoveredCount = 0
+        Dim LostCount = 0
+
         For Each playlist In Database.playlistListData.Rows
             Dim playlistId = playlist(0)
             Dim nextPageToken As String = ""
@@ -157,6 +165,7 @@ Public Class Form1
                             'recovered
                             Database.InsertSqlPlaylistItemRecoveredList(playlistId, filterRow(1), filterRow(2), filterRow(3), filterRow(4), filterRow(5))
                             Database.DeleteSqlPlaylistItem(filterRow(1), playlistId)
+                            RecoveredCount += 1
                         Else
                             'check if not in recovered and not in lost
                             Dim filterRowRecover = Database.playlistItemListRecoveredData.AsEnumerable.Where(Function(dr) dr(0).ToString = playlistId AndAlso dr(1).ToString = videoId).FirstOrDefault
@@ -164,12 +173,14 @@ Public Class Form1
                             If filterRowRecover Is Nothing AndAlso filterRowLost Is Nothing Then
                                 'no backup
                                 Database.InsertSqlPlaylistItemLostList(playlistId, videoId, title, desc, videoOwnerChannelId, videoOwnerChannelTitle)
+                                LostCount += 1
                             End If
                         End If
                     Else
                         If filterRow Is Nothing Then
                             'new added
                             Database.InsertSqlPlaylistItemList(playlistId, videoId, title, desc, videoOwnerChannelId, videoOwnerChannelTitle)
+                            AddedCount += 1
                         End If
                     End If
 
@@ -188,13 +199,13 @@ Public Class Form1
                     If Not playlistItemsCache.ContainsKey(rows(1)) Then
                         Database.InsertSqlPlaylistItemRemovedList(playlistId, rows(1), rows(2), rows(3), rows(4), rows(5))
                         Database.DeleteSqlPlaylistItem(rows(1), playlistId)
+                        RemovedCount += 1
                     End If
                 Next
             End If
         Next
 
-        Database.GetSqlPlaylistItemsList()
-        Database.GetSqlPlaylistItemsRecoveredList()
+        Database.InsertSqlSyncHistory(AddedCount, RemovedCount, RecoveredCount, LostCount)
     End Sub
 #End Region
 
@@ -205,12 +216,14 @@ Public Class Form1
         Util.InitDGV(DataGridView3)
         Util.InitDGV(DataGridView4)
         Util.InitDGV(DataGridView5)
+        Util.InitDGV(DataGridView6)
 
         Util.SetFilterDataGridViewData(Database.playlistListData, DataGridView1)
         Util.SetFilterDataGridViewData(Database.playlistItemListData, DataGridView2)
         Util.SetFilterDataGridViewData(Database.playlistItemListRecoveredData, DataGridView3)
         Util.SetFilterDataGridViewData(Database.playlistItemListRemovedData, DataGridView4)
         Util.SetFilterDataGridViewData(Database.playlistItemListLostData, DataGridView5)
+        Util.SetFilterDataGridViewData(Database.syncHistoryData, DataGridView6)
 
         Dim linkPlaylist As New DataGridViewLinkColumn With {
             .HeaderText = "YT Link",
@@ -249,6 +262,7 @@ Public Class Form1
         DataGridView3.Refresh()
         DataGridView4.Refresh()
         DataGridView5.Refresh()
+        DataGridView6.Refresh()
     End Sub
 
     Private Sub SetYTLinks()
@@ -292,6 +306,7 @@ Public Class Form1
         DataGridView3.Refresh()
         DataGridView4.Refresh()
         DataGridView5.Refresh()
+        DataGridView6.Refresh()
     End Sub
 
     Private Sub SetComboboxValues()

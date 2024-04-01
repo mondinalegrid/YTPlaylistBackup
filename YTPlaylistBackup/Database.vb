@@ -7,6 +7,7 @@ Public Class Database
     Public Shared Property playlistItemListRecoveredData As New DataTable
     Public Shared Property playlistItemListRemovedData As New DataTable
     Public Shared Property playlistItemListLostData As New DataTable
+    Public Shared Property syncHistoryData As New DataTable
 #End Region
 
 #Region "Variables"
@@ -66,6 +67,16 @@ Public Class Database
             playlistItemListLostData.Columns.Add("description", GetType(String))
             playlistItemListLostData.Columns.Add("videoOwnerChannelId", GetType(String))
             playlistItemListLostData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+        End If
+
+        syncHistoryData.Clear()
+        syncHistoryData.AcceptChanges()
+        If syncHistoryData.Columns.Count = 0 Then
+            syncHistoryData.Columns.Add("syncDate", GetType(Date))
+            syncHistoryData.Columns.Add("AddedCount", GetType(Integer))
+            syncHistoryData.Columns.Add("RemovedCount", GetType(Integer))
+            syncHistoryData.Columns.Add("RecoveredCount", GetType(Integer))
+            syncHistoryData.Columns.Add("LostCount", GetType(Integer))
         End If
     End Sub
 #End Region
@@ -205,6 +216,33 @@ Public Class Database
         End Try
         objconnection.Close()
     End Sub
+
+    Public Shared Sub GetSqlSyncHistory()
+        Dim c As New SqlCommand
+        Dim dr As SqlDataReader
+        Try
+            If objconnection.State = ConnectionState.Closed Then
+                objconnection.Open()
+            End If
+            With c
+                .Connection = objconnection
+                .CommandText = "SELECT * from SyncHistory ORDER BY syncDate ASC"
+                .CommandType = CommandType.Text
+                dr = .ExecuteReader
+            End With
+            If syncHistoryData.Rows.Count > 0 AndAlso dr.HasRows Then
+                syncHistoryData.Rows.Clear()
+                syncHistoryData.AcceptChanges()
+            End If
+            While dr.Read
+                syncHistoryData.Rows.Add(dr(6), dr(1), dr(2), dr(3), dr(4))
+            End While
+            syncHistoryData.AcceptChanges()
+            dr.Close()
+        Catch ex As Exception
+        End Try
+        objconnection.Close()
+    End Sub
 #End Region
 
 #Region "Insert"
@@ -323,6 +361,29 @@ Public Class Database
                 .Parameters.AddWithValue("@description", description)
                 .Parameters.AddWithValue("@videoOwnerChannelId", If(videoOwnerChannelId, ""))
                 .Parameters.AddWithValue("@videoOwnerChannelTitle", If(videoOwnerChannelTitle, ""))
+                .Parameters.AddWithValue("@syncDate", Now)
+                .ExecuteNonQuery()
+            End With
+        Catch ex As Exception
+        End Try
+        objconnection.Close()
+    End Sub
+
+    Public Shared Sub InsertSqlSyncHistory(addedCount As Integer, removedCount As Integer, recoveredCount As Integer, lostCount As Integer)
+        Dim c As New SqlCommand
+        Try
+            If objconnection.State = ConnectionState.Closed Then
+                objconnection.Open()
+            End If
+            With c
+                .Connection = objconnection
+                .CommandText = "INSERT INTO SyncHistory (AddedCount, RemovedCount, RecoveredCount, LostCount, syncDate)" &
+                    "Values(@AddedCount, @RemovedCount, @RecoveredCount, @LostCount, @syncDate)"
+                .CommandType = CommandType.Text
+                .Parameters.AddWithValue("@AddedCount", addedCount)
+                .Parameters.AddWithValue("@RemovedCount", removedCount)
+                .Parameters.AddWithValue("@RecoveredCount", recoveredCount)
+                .Parameters.AddWithValue("@LostCount", lostCount)
                 .Parameters.AddWithValue("@syncDate", Now)
                 .ExecuteNonQuery()
             End With
