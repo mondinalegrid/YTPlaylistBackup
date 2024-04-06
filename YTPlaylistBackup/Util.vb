@@ -5,7 +5,6 @@ Public Class Util
 #Region "Variables"
     Public Shared Property ClientID As String = Configuration.ConfigurationManager.AppSettings("ClientID")
     Public Shared Property ClientSecret As String = Configuration.ConfigurationManager.AppSettings("ClientSecret")
-    Public Shared Property ChannelId As String = Configuration.ConfigurationManager.AppSettings("ChannelId")
     Public Shared Property SqlConnection As String = Configuration.ConfigurationManager.AppSettings("SqlConnection")
 #End Region
 
@@ -48,36 +47,18 @@ Public Class Util
         End If
     End Function
 
-    Public Shared Function GetChromePath() As String
-        Dim lPath As String = Nothing
-
-        Try
-            Dim lTmp = Registry.GetValue("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe", "", Nothing)
-
-            If lTmp IsNot Nothing Then
-                lPath = lTmp.ToString()
-            Else
-                lTmp = Registry.GetValue("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe", "", Nothing)
-                If lTmp IsNot Nothing Then lPath = lTmp.ToString()
-            End If
-
-        Catch lEx As Exception
-            'Logger.[Error](lEx)
-        End Try
-
-        If lPath Is Nothing Then
-            'Logger.Warn("Chrome install path not found! Returning hardcoded path")
-            lPath = "C:\Program Files\Google\Chrome\Application"
-        End If
-
-        Return lPath
-    End Function
-
     Public Shared Sub InitCombobox(ByRef cmbBox As ComboBox)
         cmbBox.DropDownStyle = ComboBoxStyle.DropDownList
         cmbBox.FlatStyle = FlatStyle.Popup
         cmbBox.DisplayMember = "Value"
         cmbBox.ValueMember = "Key"
+    End Sub
+
+    Public Shared Sub OpenLink(link As String)
+        Dim process As New Process
+        process.StartInfo.UseShellExecute = True
+        process.StartInfo.FileName = link
+        process.Start()
     End Sub
 #End Region
 

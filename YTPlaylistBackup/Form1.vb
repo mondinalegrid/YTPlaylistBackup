@@ -336,7 +336,7 @@ Public Class Form1
             Dim row = DataGridView1.Rows(e.RowIndex)
             If row.Cells(0).Value Is Nothing Then Return
             Dim url = row.Cells(0).Value.ToString()
-            Process.Start(Util.GetChromePath, url)
+            Util.OpenLink(url)
         End If
     End Sub
 
@@ -345,7 +345,7 @@ Public Class Form1
             Dim row = DataGridView2.Rows(e.RowIndex)
             If row.Cells(0).Value Is Nothing Then Return
             Dim url = row.Cells(0).Value.ToString()
-            Process.Start(Util.GetChromePath, url)
+            Util.OpenLink(url)
         End If
     End Sub
 
@@ -354,7 +354,7 @@ Public Class Form1
             Dim row = DataGridView3.Rows(e.RowIndex)
             If row.Cells(0).Value Is Nothing Then Return
             Dim url = row.Cells(0).Value.ToString()
-            Process.Start(Util.GetChromePath, url)
+            Util.OpenLink(url)
         End If
     End Sub
 
@@ -363,7 +363,7 @@ Public Class Form1
             Dim row = DataGridView4.Rows(e.RowIndex)
             If row.Cells(0).Value Is Nothing Then Return
             Dim url = row.Cells(0).Value.ToString()
-            Process.Start(Util.GetChromePath, url)
+            Util.OpenLink(url)
         End If
     End Sub
 
@@ -372,7 +372,7 @@ Public Class Form1
             Dim row = DataGridView5.Rows(e.RowIndex)
             If row.Cells(0).Value Is Nothing Then Return
             Dim url = row.Cells(0).Value.ToString()
-            Process.Start(Util.GetChromePath, url)
+            Util.OpenLink(url)
         End If
     End Sub
 
