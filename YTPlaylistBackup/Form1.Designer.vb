@@ -28,6 +28,7 @@ Partial Class Form1
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
@@ -87,7 +88,7 @@ Partial Class Form1
         'ToolStrip1
         '
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton3})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton3, Me.ToolStripProgressBar1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 425)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(800, 25)
@@ -103,6 +104,12 @@ Partial Class Form1
         Me.ToolStripButton3.Size = New System.Drawing.Size(52, 22)
         Me.ToolStripButton3.Text = "Sync"
         Me.ToolStripButton3.ToolTipText = "Sync Playlist and Items"
+        '
+        'ToolStripProgressBar1
+        '
+        Me.ToolStripProgressBar1.Name = "ToolStripProgressBar1"
+        Me.ToolStripProgressBar1.Size = New System.Drawing.Size(100, 22)
+        Me.ToolStripProgressBar1.Visible = False
         '
         'TabControl1
         '
@@ -335,4 +342,5 @@ Partial Class Form1
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents TabPage6 As TabPage
     Friend WithEvents DataGridView6 As DataGridView
+    Friend WithEvents ToolStripProgressBar1 As ToolStripProgressBar
 End Class

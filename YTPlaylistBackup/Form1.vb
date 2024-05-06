@@ -49,7 +49,7 @@ Public Class Form1
 
             SetComboboxValues()
 
-            MsgBox("Sync Completed")
+            MessageBox.Show("Sync Completed", "Complete")
             ToolStripButton3.Enabled = True
         End If
     End Sub
@@ -134,6 +134,8 @@ Public Class Form1
         Dim RecoveredCount = 0
         Dim LostCount = 0
 
+        ToolStripProgressBar1.Visible = True
+        ToolStripProgressBar1.Maximum = Database.playlistListData.Rows.Count
         For Each playlist In Database.playlistListData.Rows
             Dim playlistId = playlist(0)
             Dim nextPageToken As String = ""
@@ -203,9 +205,11 @@ Public Class Form1
                     End If
                 Next
             End If
+            ToolStripProgressBar1.Value = ToolStripProgressBar1.Value + 1
         Next
 
         Database.InsertSqlSyncHistory(AddedCount, RemovedCount, RecoveredCount, LostCount)
+        ToolStripProgressBar1.Visible = False
     End Sub
 #End Region
 
