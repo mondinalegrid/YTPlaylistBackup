@@ -31,10 +31,14 @@ Public Class Util
         DGV.Columns.Clear()
     End Sub
 
-    Public Shared Sub SetFilterDataGridViewData(ByVal _Data As DataTable, ByRef _DataGridView As DataGridView, Optional _CustomFilter As String = "")
+    Public Shared Sub SetFilterDataGridViewData(ByVal _Data As DataTable, ByRef _DataGridView As DataGridView, Optional _CustomFilter As String = "", Optional _Sort As String = "")
         Dim DataFiltered = _Data.DefaultView
 
         DataFiltered.RowFilter = If(_CustomFilter <> "", _CustomFilter, "")
+
+        If _Sort <> "" Then
+            DataFiltered.Sort = _Sort
+        End If
 
         _DataGridView.DataSource = DataFiltered
     End Sub

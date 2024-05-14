@@ -23,6 +23,7 @@ Public Class Database
             playlistListData.Columns.Add("title", GetType(String))
             playlistListData.Columns.Add("description", GetType(String))
             playlistListData.Columns.Add("itemCount", GetType(Integer))
+            playlistListData.Columns.Add("syncDate", GetType(Date))
         End If
 
         playlistItemListData.Clear()
@@ -34,6 +35,7 @@ Public Class Database
             playlistItemListData.Columns.Add("description", GetType(String))
             playlistItemListData.Columns.Add("videoOwnerChannelId", GetType(String))
             playlistItemListData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+            playlistItemListData.Columns.Add("syncDate", GetType(Date))
         End If
 
         playlistItemListRecoveredData.Clear()
@@ -45,6 +47,7 @@ Public Class Database
             playlistItemListRecoveredData.Columns.Add("description", GetType(String))
             playlistItemListRecoveredData.Columns.Add("videoOwnerChannelId", GetType(String))
             playlistItemListRecoveredData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+            playlistItemListRecoveredData.Columns.Add("syncDate", GetType(Date))
         End If
 
         playlistItemListRemovedData.Clear()
@@ -56,6 +59,7 @@ Public Class Database
             playlistItemListRemovedData.Columns.Add("description", GetType(String))
             playlistItemListRemovedData.Columns.Add("videoOwnerChannelId", GetType(String))
             playlistItemListRemovedData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+            playlistItemListRemovedData.Columns.Add("syncDate", GetType(Date))
         End If
 
         playlistItemListLostData.Clear()
@@ -67,6 +71,7 @@ Public Class Database
             playlistItemListLostData.Columns.Add("description", GetType(String))
             playlistItemListLostData.Columns.Add("videoOwnerChannelId", GetType(String))
             playlistItemListLostData.Columns.Add("videoOwnerChannelTitle", GetType(String))
+            playlistItemListLostData.Columns.Add("syncDate", GetType(Date))
         End If
 
         syncHistoryData.Clear()
@@ -100,7 +105,7 @@ Public Class Database
                 playlistListData.AcceptChanges()
             End If
             While dr.Read
-                playlistListData.Rows.Add(dr(1), dr(2), dr(3), dr(4))
+                playlistListData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5))
             End While
             playlistListData.AcceptChanges()
             dr.Close()
@@ -127,7 +132,7 @@ Public Class Database
                 playlistItemListData.AcceptChanges()
             End If
             While dr.Read
-                playlistItemListData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6))
+                playlistItemListData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6), dr(7))
             End While
             playlistItemListData.AcceptChanges()
             dr.Close()
@@ -154,7 +159,7 @@ Public Class Database
                 playlistItemListRecoveredData.AcceptChanges()
             End If
             While dr.Read
-                playlistItemListRecoveredData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6))
+                playlistItemListRecoveredData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6), dr(7))
             End While
             playlistItemListRecoveredData.AcceptChanges()
             dr.Close()
@@ -181,7 +186,7 @@ Public Class Database
                 playlistItemListRemovedData.AcceptChanges()
             End If
             While dr.Read
-                playlistItemListRemovedData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6))
+                playlistItemListRemovedData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6), dr(7))
             End While
             playlistItemListRemovedData.AcceptChanges()
             dr.Close()
@@ -208,7 +213,7 @@ Public Class Database
                 playlistItemListLostData.AcceptChanges()
             End If
             While dr.Read
-                playlistItemListLostData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6))
+                playlistItemListLostData.Rows.Add(dr(1), dr(2), dr(3), dr(4), dr(5), dr(6), dr(7))
             End While
             playlistItemListLostData.AcceptChanges()
             dr.Close()
