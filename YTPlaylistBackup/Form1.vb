@@ -34,6 +34,10 @@ Public Class Form1
         If MessageBox.Show("Are you sure?", "Expensive API Call", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             ToolStripButton3.Enabled = False
 
+            ToolStripProgressBar1.Visible = True
+            ToolStripProgressBar1.Value = 0
+            ToolStripProgressBar1.Maximum = Database.playlistListData.Rows.Count + 2
+
             Await OAuth()
             GetPlaylistList()
             GetPlaylistItemLists()
@@ -46,16 +50,16 @@ Public Class Form1
             Database.GetSqlPlaylistItemsLostList()
             Database.GetSqlSyncHistory()
             SetDGVData()
-
             SetComboboxValues(-1)
-
+            ToolStripProgressBar1.Value += 1
+            ToolStripProgressBar1.Visible = False
             MessageBox.Show("Sync Completed", "Complete")
             ToolStripButton3.Enabled = True
         End If
     End Sub
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        Me.Close()
+        Close()
     End Sub
 #End Region
 
@@ -124,6 +128,7 @@ Public Class Form1
         Next
 
         Database.GetSqlPlaylistList()
+        ToolStripProgressBar1.Value += 1
     End Sub
 
     Private Sub GetPlaylistItemLists()
@@ -134,8 +139,6 @@ Public Class Form1
         Dim RecoveredCount = 0
         Dim LostCount = 0
 
-        ToolStripProgressBar1.Visible = True
-        ToolStripProgressBar1.Maximum = Database.playlistListData.Rows.Count
         For Each playlist In Database.playlistListData.Rows
             Dim playlistId = playlist(0)
             Dim nextPageToken As String = ""
@@ -205,11 +208,10 @@ Public Class Form1
                     End If
                 Next
             End If
-            ToolStripProgressBar1.Value = ToolStripProgressBar1.Value + 1
+            ToolStripProgressBar1.Value += 1
         Next
 
         Database.InsertSqlSyncHistory(AddedCount, RemovedCount, RecoveredCount, LostCount)
-        ToolStripProgressBar1.Visible = False
     End Sub
 #End Region
 
