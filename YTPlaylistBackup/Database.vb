@@ -11,7 +11,7 @@ Public Class Database
 #End Region
 
 #Region "Variables"
-    Private Shared Property objconnection As New SqlConnection(Util.SqlConnection)
+    Private Shared Property objconnection As New SqlConnection(SqlConn)
 #End Region
 
 #Region "Sub/Func"
@@ -82,6 +82,7 @@ Public Class Database
             syncHistoryData.Columns.Add("RemovedCount", GetType(Integer))
             syncHistoryData.Columns.Add("RecoveredCount", GetType(Integer))
             syncHistoryData.Columns.Add("LostCount", GetType(Integer))
+            syncHistoryData.Columns.Add("Notes", GetType(String))
         End If
     End Sub
 #End Region
@@ -240,13 +241,24 @@ Public Class Database
                 syncHistoryData.AcceptChanges()
             End If
             While dr.Read
-                syncHistoryData.Rows.Add(dr(6), dr(1), dr(2), dr(3), dr(4))
+                syncHistoryData.Rows.Add(dr(6), dr(1), dr(2), dr(3), dr(4), dr(5))
             End While
             syncHistoryData.AcceptChanges()
             dr.Close()
         Catch ex As Exception
         End Try
         objconnection.Close()
+    End Sub
+
+    Public Shared Sub GetSqlAll()
+        InitDatatables()
+
+        GetSqlPlaylistList()
+        GetSqlPlaylistItemsList()
+        GetSqlPlaylistItemsRecoveredList()
+        GetSqlPlaylistItemsRemovedList()
+        GetSqlPlaylistItemsLostList()
+        GetSqlSyncHistory()
     End Sub
 #End Region
 
@@ -374,7 +386,7 @@ Public Class Database
         objconnection.Close()
     End Sub
 
-    Public Shared Sub InsertSqlSyncHistory(addedCount As Integer, removedCount As Integer, recoveredCount As Integer, lostCount As Integer)
+    Public Shared Sub InsertSqlSyncHistory(addedCount As Integer, removedCount As Integer, recoveredCount As Integer, lostCount As Integer, notes As String)
         Dim c As New SqlCommand
         Try
             If objconnection.State = ConnectionState.Closed Then
@@ -382,13 +394,14 @@ Public Class Database
             End If
             With c
                 .Connection = objconnection
-                .CommandText = "INSERT INTO SyncHistory (AddedCount, RemovedCount, RecoveredCount, LostCount, syncDate)" &
-                    "Values(@AddedCount, @RemovedCount, @RecoveredCount, @LostCount, @syncDate)"
+                .CommandText = "INSERT INTO SyncHistory (AddedCount, RemovedCount, RecoveredCount, LostCount, Notes, syncDate)" &
+                    "Values(@AddedCount, @RemovedCount, @RecoveredCount, @LostCount, @Notes, @syncDate)"
                 .CommandType = CommandType.Text
                 .Parameters.AddWithValue("@AddedCount", addedCount)
                 .Parameters.AddWithValue("@RemovedCount", removedCount)
                 .Parameters.AddWithValue("@RecoveredCount", recoveredCount)
                 .Parameters.AddWithValue("@LostCount", lostCount)
+                .Parameters.AddWithValue("@Notes", lostCount)
                 .Parameters.AddWithValue("@syncDate", Now)
                 .ExecuteNonQuery()
             End With
