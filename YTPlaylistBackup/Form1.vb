@@ -10,7 +10,7 @@ Public Class Form1
     'reference https://stackoverflow.com/questions/65357223/get-youtube-channel-data-using-google-youtube-data-api-in-vb-net
 
     'move to SQLite?
-
+    Private SearchedDatatable As DataTables = -1
 #Region "Variables"
     Private credential As UserCredential
     Private ytService As YouTubeService
@@ -19,6 +19,7 @@ Public Class Form1
 #Region "Form Events"
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetForm(Me)
+        Timer1.Interval = 300
         CenterToScreen()
 
         Database.GetSqlAll()
@@ -503,10 +504,159 @@ Public Class Form1
         End If
         ToolStripProgressBar1.Visible = False
     End Sub
+
+    Private Sub SetDGVFilter(Datatables As DataTables)
+        Dim filter As String = ""
+        Dim searchText As String = ""
+
+        If Datatables = DataTables.playlistList Then
+            searchText = TextBox1.Text.Trim
+        ElseIf Datatables = DataTables.playlistItemList Then
+            searchText = TextBox2.Text.Trim
+        ElseIf Datatables = DataTables.playlistItemListRecovered Then
+            searchText = TextBox3.Text.Trim
+        ElseIf Datatables = DataTables.playlistItemListRemoved Then
+            searchText = TextBox4.Text.Trim
+        ElseIf Datatables = DataTables.playlistItemListLost Then
+            searchText = TextBox5.Text.Trim
+        ElseIf Datatables = DataTables.syncHistory Then
+            searchText = TextBox6.Text.Trim
+        End If
+
+        If String.IsNullOrEmpty(searchText) Then
+            If Datatables = DataTables.playlistList Then
+                SetFilterDataGridViewData(Database.playlistListData, DataGridView1, filter)
+                SetRowValue(DataTables.playlistList)
+            ElseIf Datatables = DataTables.playlistItemList Then
+                If Not ComboBox1.SelectedItem.Value = "All" Then
+                    filter = String.Format("playlistID = '{0}'", ComboBox1.SelectedItem.Key)
+                End If
+                SetFilterDataGridViewData(Database.playlistItemListData, DataGridView2, filter)
+                SetRowValue(DataTables.playlistItemList)
+            ElseIf Datatables = DataTables.playlistItemListRecovered Then
+                If Not ComboBox2.SelectedItem.Value = "All" Then
+                    filter = String.Format("playlistID = '{0}'", ComboBox2.SelectedItem.Key)
+                End If
+                SetFilterDataGridViewData(Database.playlistItemListRecoveredData, DataGridView3, filter)
+                SetRowValue(DataTables.playlistItemListRecovered)
+            ElseIf Datatables = DataTables.playlistItemListRemoved Then
+                If Not ComboBox3.SelectedItem.Value = "All" Then
+                    filter = String.Format("playlistID = '{0}'", ComboBox3.SelectedItem.Key)
+                End If
+                SetFilterDataGridViewData(Database.playlistItemListRemovedData, DataGridView4, filter)
+                SetRowValue(DataTables.playlistItemListRemoved)
+            ElseIf Datatables = DataTables.playlistItemListLost Then
+                If Not ComboBox4.SelectedItem.Value = "All" Then
+                    filter = String.Format("playlistID = '{0}'", ComboBox4.SelectedItem.Key)
+                End If
+                SetFilterDataGridViewData(Database.playlistItemListLostData, DataGridView5, filter)
+                SetRowValue(DataTables.playlistItemListLost)
+            ElseIf Datatables = DataTables.syncHistory Then
+                SetFilterDataGridViewData(Database.syncHistoryData, DataGridView6, filter)
+                SetRowValue(DataTables.syncHistory)
+            End If
+        Else
+            If Datatables = DataTables.playlistList Then
+                filter = $"playlistID LIKE '%{searchText}%' 
+                            OR playlistID LIKE '%{searchText.Replace("https://www.youtube.com/playlist?list=", "")}%' 
+                            OR title LIKE '%{searchText}%' 
+                            OR description LIKE '%{searchText}%'"
+
+                Dim tempNumber As Integer
+                If Integer.TryParse(searchText, tempNumber) Then
+                    filter &= $" OR itemCount = {tempNumber}"
+                End If
+
+                Dim tempDate As Date
+                If Date.TryParse(searchText, tempDate) Then
+                    Dim startDate As Date = tempDate.Date
+                    Dim endDate As Date = startDate.AddDays(1)
+                    filter &= $" OR (syncDate >= #{startDate}# AND syncDate < #{endDate}#)"
+                End If
+
+                SetFilterDataGridViewData(Database.playlistListData, DataGridView1, filter)
+                SetRowValue(DataTables.playlistList)
+            ElseIf {DataTables.playlistItemList, DataTables.playlistItemListRecovered, DataTables.playlistItemListRemoved, DataTables.playlistItemListLost}.Contains(Datatables) Then
+                filter = $"(title LIKE '%{searchText}%' 
+                            OR description LIKE '%{searchText}%' 
+                            OR videoID LIKE '%{searchText}%' 
+                            OR videoID LIKE '%{searchText.Replace("https://www.youtube.com/watch?v=", "")}%' 
+                            OR videoOwnerChannelId LIKE '%{searchText}%' 
+                            OR videoOwnerChannelTitle LIKE '%{searchText}%'"
+
+                Dim tempDate As Date
+                If Date.TryParse(searchText, tempDate) Then
+                    Dim startDate As Date = tempDate.Date
+                    Dim endDate As Date = startDate.AddDays(1)
+                    filter &= $" OR (syncDate >= #{startDate}# AND syncDate < #{endDate}#)"
+                End If
+
+                filter &= ")"
+
+                If Datatables = DataTables.playlistItemList Then
+                    If Not ComboBox1.SelectedItem.Value = "All" Then
+                        filter &= $" AND playlistID = '{ComboBox1.SelectedItem.Key}'"
+                    End If
+                    SetFilterDataGridViewData(Database.playlistItemListData, DataGridView2, filter)
+                    SetRowValue(DataTables.playlistItemList)
+                ElseIf Datatables = DataTables.playlistItemListRecovered Then
+                    If Not ComboBox2.SelectedItem.Value = "All" Then
+                        filter &= $" AND playlistID = '{ComboBox2.SelectedItem.Key}'"
+                    End If
+                    SetFilterDataGridViewData(Database.playlistItemListRecoveredData, DataGridView3, filter)
+                    SetRowValue(DataTables.playlistItemListRecovered)
+                ElseIf Datatables = DataTables.playlistItemListRemoved Then
+                    If Not ComboBox3.SelectedItem.Value = "All" Then
+                        filter &= $" AND playlistID = '{ComboBox3.SelectedItem.Key}'"
+                    End If
+                    SetFilterDataGridViewData(Database.playlistItemListRemovedData, DataGridView4, filter)
+                    SetRowValue(DataTables.playlistItemListRemoved)
+                ElseIf Datatables = DataTables.playlistItemListLost Then
+                    If Not ComboBox4.SelectedItem.Value = "All" Then
+                        filter &= $" AND playlistID = '{ComboBox4.SelectedItem.Key}'"
+                    End If
+                    SetFilterDataGridViewData(Database.playlistItemListLostData, DataGridView5, filter)
+                    SetRowValue(DataTables.playlistItemListLost)
+                End If
+            ElseIf Datatables = DataTables.syncHistory Then
+                filter = $"Notes LIKE '%{searchText}%'"
+
+                Dim tempNumber1 As Integer, tempNumber2 As Integer, tempNumber3 As Integer, tempNumber4 As Integer
+                If Integer.TryParse(searchText, tempNumber1) Then
+                    filter &= $" OR AddedCount = {tempNumber1}"
+                End If
+                If Integer.TryParse(searchText, tempNumber2) Then
+                    filter &= $" OR RemovedCount = {tempNumber2}"
+                End If
+                If Integer.TryParse(searchText, tempNumber3) Then
+                    filter &= $" OR RecoveredCount = {tempNumber3}"
+                End If
+                If Integer.TryParse(searchText, tempNumber4) Then
+                    filter &= $" OR LostCount = {tempNumber4}"
+                End If
+
+                Dim tempDate As Date
+                If Date.TryParse(searchText, tempDate) Then
+                    Dim startDate As Date = tempDate.Date
+                    Dim endDate As Date = startDate.AddDays(1)
+                    filter &= $" OR (syncDate >= #{startDate}# AND syncDate < #{endDate}#)"
+                End If
+
+                SetFilterDataGridViewData(Database.syncHistoryData, DataGridView6, filter)
+                SetRowValue(DataTables.syncHistory)
+            End If
+        End If
+    End Sub
 #End Region
 
 #Region "Control Handlers"
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+        TextBox3.Text = ""
+        TextBox4.Text = ""
+        TextBox5.Text = ""
+        TextBox6.Text = ""
 
         If TabControl1.SelectedIndex = 0 Then
             SetRowValue(DataTables.playlistList)
@@ -584,39 +734,19 @@ Public Class Form1
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        Dim filter As String = ""
-        If Not ComboBox1.SelectedItem.Value = "All" Then
-            filter = String.Format("playlistID = '{0}'", ComboBox1.SelectedItem.Key)
-        End If
-        SetFilterDataGridViewData(Database.playlistItemListData, DataGridView2, filter)
-        SetRowValue(DataTables.playlistItemList)
+        SetDGVFilter(DataTables.playlistItemList)
     End Sub
 
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-        Dim filter As String = ""
-        If Not ComboBox2.SelectedItem.Value = "All" Then
-            filter = String.Format("playlistID = '{0}'", ComboBox2.SelectedItem.Key)
-        End If
-        SetFilterDataGridViewData(Database.playlistItemListRecoveredData, DataGridView3, filter)
-        SetRowValue(DataTables.playlistItemListRecovered)
+        SetDGVFilter(DataTables.playlistItemListRecovered)
     End Sub
 
     Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
-        Dim filter As String = ""
-        If Not ComboBox3.SelectedItem.Value = "All" Then
-            filter = String.Format("playlistID = '{0}'", ComboBox3.SelectedItem.Key)
-        End If
-        SetFilterDataGridViewData(Database.playlistItemListRemovedData, DataGridView4, filter)
-        SetRowValue(DataTables.playlistItemListRemoved)
+        SetDGVFilter(DataTables.playlistItemListRemoved)
     End Sub
 
     Private Sub ComboBox4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox4.SelectedIndexChanged
-        Dim filter As String = ""
-        If Not ComboBox4.SelectedItem.Value = "All" Then
-            filter = String.Format("playlistID = '{0}'", ComboBox4.SelectedItem.Key)
-        End If
-        SetFilterDataGridViewData(Database.playlistItemListLostData, DataGridView5, filter)
-        SetRowValue(DataTables.playlistItemListLost)
+        SetDGVFilter(DataTables.playlistItemListLost)
     End Sub
 
     Private Sub DataGridView1_Sorted(sender As Object, e As EventArgs) Handles DataGridView1.Sorted
@@ -685,6 +815,54 @@ Public Class Form1
             e.Value = playlistId 'change displayed value
             e.FormattingApplied = True
         End If
+    End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+        SearchedDatatable = DataTables.playlistList
+        Timer1.Stop()
+        Timer1.Start()
+    End Sub
+
+    Private Sub TextBox2_TextChanged(sender As Object, e As EventArgs) Handles TextBox2.TextChanged
+        SearchedDatatable = DataTables.playlistItemList
+        Timer1.Stop()
+        Timer1.Start()
+    End Sub
+
+    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs) Handles TextBox3.TextChanged
+        SearchedDatatable = DataTables.playlistItemListRecovered
+        Timer1.Stop()
+        Timer1.Start()
+    End Sub
+
+    Private Sub TextBox4_TextChanged(sender As Object, e As EventArgs) Handles TextBox4.TextChanged
+        SearchedDatatable = DataTables.playlistItemListRemoved
+        Timer1.Stop()
+        Timer1.Start()
+    End Sub
+
+    Private Sub TextBox5_TextChanged(sender As Object, e As EventArgs) Handles TextBox5.TextChanged
+        SearchedDatatable = DataTables.playlistItemListLost
+        Timer1.Stop()
+        Timer1.Start()
+    End Sub
+
+    Private Sub TextBox6_TextChanged(sender As Object, e As EventArgs) Handles TextBox6.TextChanged
+        SearchedDatatable = DataTables.syncHistory
+        Timer1.Stop()
+        Timer1.Start()
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Timer1.Stop()
+
+        If SearchedDatatable = -1 Then
+            Return
+        End If
+
+        SetDGVFilter(SearchedDatatable)
+
+        SearchedDatatable = -1
     End Sub
 #End Region
 End Class

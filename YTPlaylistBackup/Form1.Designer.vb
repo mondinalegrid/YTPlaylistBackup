@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -34,22 +35,29 @@ Partial Class Form1
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.DataGridView2 = New System.Windows.Forms.DataGridView()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.DataGridView3 = New System.Windows.Forms.DataGridView()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.DataGridView4 = New System.Windows.Forms.DataGridView()
         Me.ComboBox3 = New System.Windows.Forms.ComboBox()
         Me.TabPage5 = New System.Windows.Forms.TabPage()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.DataGridView5 = New System.Windows.Forms.DataGridView()
         Me.ComboBox4 = New System.Windows.Forms.ComboBox()
         Me.TabPage6 = New System.Windows.Forms.TabPage()
+        Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.DataGridView6 = New System.Windows.Forms.DataGridView()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -151,6 +159,7 @@ Partial Class Form1
         '
         'TabPage1
         '
+        Me.TabPage1.Controls.Add(Me.TextBox1)
         Me.TabPage1.Controls.Add(Me.DataGridView1)
         Me.TabPage1.Location = New System.Drawing.Point(4, 24)
         Me.TabPage1.Name = "TabPage1"
@@ -160,18 +169,27 @@ Partial Class Form1
         Me.TabPage1.Text = "Playlists"
         Me.TabPage1.UseVisualStyleBackColor = True
         '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(629, 6)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.PlaceholderText = "Search"
+        Me.TextBox1.Size = New System.Drawing.Size(155, 23)
+        Me.TextBox1.TabIndex = 2
+        '
         'DataGridView1
         '
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridView1.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.DataGridView1.Location = New System.Drawing.Point(3, 35)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.RowTemplate.Height = 25
-        Me.DataGridView1.Size = New System.Drawing.Size(786, 367)
+        Me.DataGridView1.Size = New System.Drawing.Size(786, 335)
         Me.DataGridView1.TabIndex = 1
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.TextBox2)
         Me.TabPage2.Controls.Add(Me.DataGridView2)
         Me.TabPage2.Controls.Add(Me.ComboBox1)
         Me.TabPage2.Location = New System.Drawing.Point(4, 24)
@@ -181,6 +199,14 @@ Partial Class Form1
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Tracked List"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'TextBox2
+        '
+        Me.TextBox2.Location = New System.Drawing.Point(629, 6)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.PlaceholderText = "Search"
+        Me.TextBox2.Size = New System.Drawing.Size(155, 23)
+        Me.TextBox2.TabIndex = 3
         '
         'DataGridView2
         '
@@ -202,6 +228,7 @@ Partial Class Form1
         '
         'TabPage3
         '
+        Me.TabPage3.Controls.Add(Me.TextBox3)
         Me.TabPage3.Controls.Add(Me.DataGridView3)
         Me.TabPage3.Controls.Add(Me.ComboBox2)
         Me.TabPage3.Location = New System.Drawing.Point(4, 24)
@@ -211,6 +238,14 @@ Partial Class Form1
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "Recovered List"
         Me.TabPage3.UseVisualStyleBackColor = True
+        '
+        'TextBox3
+        '
+        Me.TextBox3.Location = New System.Drawing.Point(629, 6)
+        Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.PlaceholderText = "Search"
+        Me.TextBox3.Size = New System.Drawing.Size(155, 23)
+        Me.TextBox3.TabIndex = 3
         '
         'DataGridView3
         '
@@ -232,6 +267,7 @@ Partial Class Form1
         '
         'TabPage4
         '
+        Me.TabPage4.Controls.Add(Me.TextBox4)
         Me.TabPage4.Controls.Add(Me.DataGridView4)
         Me.TabPage4.Controls.Add(Me.ComboBox3)
         Me.TabPage4.Location = New System.Drawing.Point(4, 24)
@@ -241,6 +277,14 @@ Partial Class Form1
         Me.TabPage4.TabIndex = 3
         Me.TabPage4.Text = "Removed List"
         Me.TabPage4.UseVisualStyleBackColor = True
+        '
+        'TextBox4
+        '
+        Me.TextBox4.Location = New System.Drawing.Point(629, 6)
+        Me.TextBox4.Name = "TextBox4"
+        Me.TextBox4.PlaceholderText = "Search"
+        Me.TextBox4.Size = New System.Drawing.Size(155, 23)
+        Me.TextBox4.TabIndex = 3
         '
         'DataGridView4
         '
@@ -262,6 +306,7 @@ Partial Class Form1
         '
         'TabPage5
         '
+        Me.TabPage5.Controls.Add(Me.TextBox5)
         Me.TabPage5.Controls.Add(Me.DataGridView5)
         Me.TabPage5.Controls.Add(Me.ComboBox4)
         Me.TabPage5.Location = New System.Drawing.Point(4, 24)
@@ -271,6 +316,14 @@ Partial Class Form1
         Me.TabPage5.TabIndex = 4
         Me.TabPage5.Text = "Lost List"
         Me.TabPage5.UseVisualStyleBackColor = True
+        '
+        'TextBox5
+        '
+        Me.TextBox5.Location = New System.Drawing.Point(629, 6)
+        Me.TextBox5.Name = "TextBox5"
+        Me.TextBox5.PlaceholderText = "Search"
+        Me.TextBox5.Size = New System.Drawing.Size(155, 23)
+        Me.TextBox5.TabIndex = 3
         '
         'DataGridView5
         '
@@ -292,6 +345,7 @@ Partial Class Form1
         '
         'TabPage6
         '
+        Me.TabPage6.Controls.Add(Me.TextBox6)
         Me.TabPage6.Controls.Add(Me.DataGridView6)
         Me.TabPage6.Location = New System.Drawing.Point(4, 24)
         Me.TabPage6.Name = "TabPage6"
@@ -301,19 +355,30 @@ Partial Class Form1
         Me.TabPage6.Text = "Sync History"
         Me.TabPage6.UseVisualStyleBackColor = True
         '
+        'TextBox6
+        '
+        Me.TextBox6.Location = New System.Drawing.Point(629, 6)
+        Me.TextBox6.Name = "TextBox6"
+        Me.TextBox6.PlaceholderText = "Search"
+        Me.TextBox6.Size = New System.Drawing.Size(155, 23)
+        Me.TextBox6.TabIndex = 3
+        '
         'DataGridView6
         '
         Me.DataGridView6.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridView6.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridView6.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.DataGridView6.Location = New System.Drawing.Point(3, 35)
         Me.DataGridView6.Name = "DataGridView6"
         Me.DataGridView6.RowTemplate.Height = 25
-        Me.DataGridView6.Size = New System.Drawing.Size(786, 367)
+        Me.DataGridView6.Size = New System.Drawing.Size(786, 335)
         Me.DataGridView6.TabIndex = 0
         '
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        '
+        'Timer1
+        '
         '
         'Form1
         '
@@ -332,16 +397,22 @@ Partial Class Form1
         Me.ToolStrip1.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
+        Me.TabPage1.PerformLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage2.ResumeLayout(False)
+        Me.TabPage2.PerformLayout()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage3.ResumeLayout(False)
+        Me.TabPage3.PerformLayout()
         CType(Me.DataGridView3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage4.ResumeLayout(False)
+        Me.TabPage4.PerformLayout()
         CType(Me.DataGridView4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage5.ResumeLayout(False)
+        Me.TabPage5.PerformLayout()
         CType(Me.DataGridView5, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage6.ResumeLayout(False)
+        Me.TabPage6.PerformLayout()
         CType(Me.DataGridView6, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -374,4 +445,11 @@ Partial Class Form1
     Friend WithEvents ExportToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
     Friend WithEvents ToolStripProgressBar1 As ToolStripProgressBar
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents TextBox4 As TextBox
+    Friend WithEvents TextBox5 As TextBox
+    Friend WithEvents TextBox6 As TextBox
+    Friend WithEvents Timer1 As Timer
 End Class

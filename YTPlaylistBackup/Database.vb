@@ -401,7 +401,7 @@ Public Class Database
                 .Parameters.AddWithValue("@RemovedCount", removedCount)
                 .Parameters.AddWithValue("@RecoveredCount", recoveredCount)
                 .Parameters.AddWithValue("@LostCount", lostCount)
-                .Parameters.AddWithValue("@Notes", lostCount)
+                .Parameters.AddWithValue("@Notes", notes)
                 .Parameters.AddWithValue("@syncDate", Now)
                 .ExecuteNonQuery()
             End With
