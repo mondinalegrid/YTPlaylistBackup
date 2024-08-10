@@ -295,6 +295,7 @@ Public Class Form1
         SetAutoSizeModeForColumns(DataGridView3)
         SetAutoSizeModeForColumns(DataGridView4)
         SetAutoSizeModeForColumns(DataGridView5)
+        SetAutoSizeModeForColumns(DataGridView6)
 
         DataGridView1.Refresh()
         DataGridView2.Refresh()
