@@ -10,15 +10,16 @@ Public Class Form1
     'reference https://stackoverflow.com/questions/65357223/get-youtube-channel-data-using-google-youtube-data-api-in-vb-net
 
     'move to SQLite?
-    Private SearchedDatatable As DataTables = -1
+
 #Region "Variables"
     Private credential As UserCredential
     Private ytService As YouTubeService
+    Private SearchedDatatable As DataTables = -1
 #End Region
 
 #Region "Form Events"
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        SetForm(Me)
+        SetForm(Me, True)
         Timer1.Interval = 300
         CenterToScreen()
 
@@ -288,6 +289,12 @@ Public Class Form1
         ResetFirstDisplayedRowIndex(DataGridView4)
         ResetFirstDisplayedRowIndex(DataGridView5)
         ResetFirstDisplayedRowIndex(DataGridView6)
+
+        SetAutoSizeModeForColumns(DataGridView1)
+        SetAutoSizeModeForColumns(DataGridView2)
+        SetAutoSizeModeForColumns(DataGridView3)
+        SetAutoSizeModeForColumns(DataGridView4)
+        SetAutoSizeModeForColumns(DataGridView5)
 
         DataGridView1.Refresh()
         DataGridView2.Refresh()
@@ -863,6 +870,54 @@ Public Class Form1
         SetDGVFilter(SearchedDatatable)
 
         SearchedDatatable = -1
+    End Sub
+
+    Private Sub TextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' Suppress the ding sound
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub TextBox2_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox2.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' Suppress the ding sound
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub TextBox3_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox3.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' Suppress the ding sound
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub TextBox4_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox4.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' Suppress the ding sound
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub TextBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox5.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' Suppress the ding sound
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub TextBox6_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox6.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            ' Suppress the ding sound
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
     End Sub
 #End Region
 End Class

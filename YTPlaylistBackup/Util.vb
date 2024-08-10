@@ -144,7 +144,7 @@ Module Util
         End If
     End Sub
 
-    Function ExtractCsvFromZip(ByVal zipFilePath As String, ByVal csvFileName As String) As String
+    Public Function ExtractCsvFromZip(ByVal zipFilePath As String, ByVal csvFileName As String) As String
         Dim csvData As String = ""
 
         Using archive As ZipArchive = ZipFile.OpenRead(zipFilePath)
@@ -161,7 +161,7 @@ Module Util
         Return csvData
     End Function
 
-    Function CsvToDataTable(ByVal csvData As String) As DataTable
+    Public Function CsvToDataTable(ByVal csvData As String) As DataTable
         Dim dataTable As New DataTable()
 
         Using parser As New TextFieldParser(New StringReader(csvData))
@@ -197,6 +197,13 @@ Module Util
 
         Return missingRowsTable
     End Function
+
+    Public Sub SetAutoSizeModeForColumns(dgv As DataGridView)
+        For Each column As DataGridViewColumn In dgv.Columns
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        Next
+    End Sub
+
 #End Region
 
 End Module
