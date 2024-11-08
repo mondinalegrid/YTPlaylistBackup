@@ -30,6 +30,7 @@ Partial Class Form1
         Me.BackupToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StatsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
@@ -77,7 +78,7 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.BackupToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.BackupToolStripMenuItem, Me.StatsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(800, 24)
@@ -115,6 +116,12 @@ Partial Class Form1
         Me.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem"
         Me.ExportToolStripMenuItem.Size = New System.Drawing.Size(110, 22)
         Me.ExportToolStripMenuItem.Text = "Export"
+        '
+        'StatsToolStripMenuItem
+        '
+        Me.StatsToolStripMenuItem.Name = "StatsToolStripMenuItem"
+        Me.StatsToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.StatsToolStripMenuItem.Text = "Stats"
         '
         'ToolStrip1
         '
@@ -381,8 +388,9 @@ Partial Class Form1
         '
         'DataGridView6
         '
+        Me.DataGridView6.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DataGridView6.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView6.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.DataGridView6.Location = New System.Drawing.Point(3, 35)
         Me.DataGridView6.Name = "DataGridView6"
         Me.DataGridView6.RowTemplate.Height = 25
@@ -468,4 +476,5 @@ Partial Class Form1
     Friend WithEvents TextBox5 As TextBox
     Friend WithEvents TextBox6 As TextBox
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents StatsToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -70,6 +70,10 @@ Public Class Form1
             ExportToolStripMenuItem.Enabled = True
         End If
     End Sub
+
+    Private Sub StatsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StatsToolStripMenuItem.Click
+        Stats.ShowDialog()
+    End Sub
 #End Region
 
 #Region "YT API"
