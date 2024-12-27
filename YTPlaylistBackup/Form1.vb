@@ -100,29 +100,45 @@ Public Class Form1
     End Function
 
     Private Sub GetPlaylistList()
-        Dim nextPageToken As String = ""
+        'Process Regular Playlists
+        ProcessPlaylists(ytService, "", True, "")
+        'Process Liked Playlist
+        ProcessPlaylists(ytService, "", False, "LL")
+
+        Database.GetSqlPlaylistList()
+        ToolStripProgressBar1.Value += 1
+    End Sub
+
+    Private Sub ProcessPlaylists(ytService As YouTubeService, ByVal pageToken As String, ByVal isMine As Boolean, ByVal playlistId As String)
         Dim playlistCache As New Dictionary(Of String, String)
 
-        While nextPageToken IsNot Nothing
+        Do
             Dim playlistListReq = ytService.Playlists.List("contentDetails,id,snippet")
-            playlistListReq.Mine = True
             playlistListReq.MaxResults = 50
-            playlistListReq.PageToken = nextPageToken
+            playlistListReq.PageToken = pageToken
+
+            If isMine Then
+                playlistListReq.Mine = True
+            ElseIf Not String.IsNullOrEmpty(playlistId) Then
+                playlistListReq.Id = playlistId
+            End If
 
             Dim playlistListResp = playlistListReq.Execute
-            For Each playlists In playlistListResp.Items
-                Dim id = playlists.Id
-                Dim title = playlists.Snippet.Title
-                Dim desc = playlists.Snippet.Description
-                Dim itemCount = playlists.ContentDetails.ItemCount
 
-                Dim filterRow = Database.playlistListData.AsEnumerable.Where(Function(dr) dr(0).ToString = id).FirstOrDefault
+            For Each playlist In playlistListResp.Items
+                Dim id = playlist.Id
+                Dim title = playlist.Snippet.Title
+                Dim desc = playlist.Snippet.Description
+                Dim itemCount = playlist.ContentDetails.ItemCount
+
+                Dim filterRow = Database.playlistListData.AsEnumerable _
+                .Where(Function(dr) dr(0).ToString = id).FirstOrDefault
+
                 If filterRow Is Nothing Then
                     Database.InsertSqlPlaylistList(id, title, desc, itemCount)
-                Else
-                    If filterRow(1) <> title OrElse filterRow(2) <> desc OrElse filterRow(3) <> itemCount Then
-                        Database.UpdateSqlPlaylist(id, title, desc, itemCount)
-                    End If
+                    ToolStripProgressBar1.Maximum += 1
+                ElseIf filterRow(1) <> title OrElse filterRow(2) <> desc OrElse filterRow(3) <> itemCount Then
+                    Database.UpdateSqlPlaylist(id, title, desc, itemCount)
                 End If
 
                 If Not playlistCache.ContainsKey(id) Then
@@ -130,18 +146,17 @@ Public Class Form1
                 End If
             Next
 
-            nextPageToken = playlistListResp.NextPageToken
-        End While
+            pageToken = playlistListResp.NextPageToken
+        Loop While Not String.IsNullOrEmpty(pageToken)
 
-        'removed
-        For Each rows In Database.playlistListData.Rows
-            If Not playlistCache.ContainsKey(rows(0)) Then
-                Database.DeleteSqlPlaylist(rows(0))
-            End If
-        Next
-
-        Database.GetSqlPlaylistList()
-        ToolStripProgressBar1.Value += 1
+        If isMine Then
+            'removed
+            For Each rows In Database.playlistListData.Rows
+                If Not playlistCache.ContainsKey(rows(0)) AndAlso Not rows(0).ToString = "LL" Then
+                    Database.DeleteSqlPlaylist(rows(0))
+                End If
+            Next
+        End If
     End Sub
 
     Private Sub GetPlaylistItemLists()
