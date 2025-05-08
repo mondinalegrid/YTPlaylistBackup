@@ -6,5 +6,3 @@
     playlistItemListLost
     syncHistory
 End Enum
-
-'add rest of enums later

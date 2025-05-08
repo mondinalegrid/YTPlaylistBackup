@@ -9,8 +9,6 @@ Imports Google.Apis.YouTube.v3.Data
 Public Class Form1
     'reference https://stackoverflow.com/questions/65357223/get-youtube-channel-data-using-google-youtube-data-api-in-vb-net
 
-    'move to SQLite?
-
 #Region "Variables"
     Private credential As UserCredential
     Private ytService As YouTubeService
