@@ -404,13 +404,13 @@ Public Class Form1
 
     Private Sub ExportToCSV()
         Dim zipFileName = "ytPlaylistGalleryBak " & Now.ToString("yyyy-MM-dd_hh-mm-ss") & ".zip"
-        Dim zipFilePath = TempPath & zipFileName
-        Dim playlistFilePath = TempPath & PlaylistFileName
-        Dim playlistItemsFilePath = TempPath & PlaylistItemsFileName
-        Dim playlistItemsRecoveredFilePath = TempPath & PlaylistItemsRecoveredFileName
-        Dim playlistItemsRemovedFilePath = TempPath & PlaylistItemsRemovedFileName
-        Dim playlistItemsLostFilePath = TempPath & PlaylistItemsLostFileName
-        Dim syncHistoryFilePath = TempPath & SyncHistoryFileName
+        Dim zipFilePath = BackupPath & zipFileName
+        Dim playlistFilePath = BackupPath & PlaylistFileName
+        Dim playlistItemsFilePath = BackupPath & PlaylistItemsFileName
+        Dim playlistItemsRecoveredFilePath = BackupPath & PlaylistItemsRecoveredFileName
+        Dim playlistItemsRemovedFilePath = BackupPath & PlaylistItemsRemovedFileName
+        Dim playlistItemsLostFilePath = BackupPath & PlaylistItemsLostFileName
+        Dim syncHistoryFilePath = BackupPath & SyncHistoryFileName
         Dim csvFiles As New List(Of String) From {playlistFilePath, playlistItemsFilePath, playlistItemsRecoveredFilePath, playlistItemsRemovedFilePath, playlistItemsLostFilePath, syncHistoryFilePath}
 
         Try
