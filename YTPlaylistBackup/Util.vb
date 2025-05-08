@@ -7,9 +7,8 @@ Module Util
 #Region "Variables"
     Public Property ClientID As String = Configuration.ConfigurationManager.AppSettings("ClientID")
     Public Property ClientSecret As String = Configuration.ConfigurationManager.AppSettings("ClientSecret")
-    Public Property SqlConn As String = Configuration.ConfigurationManager.AppSettings("SqlConnection")
+    Public Property SqlConn As String
     Public Property BackupPath As String = Configuration.ConfigurationManager.AppSettings("BackupPath")
-    Public Property TempPath As String = Configuration.ConfigurationManager.AppSettings("TempPath")
     Public Property PlaylistFileName As String = "Playlist.csv"
     Public Property PlaylistItemsFileName As String = "PlaylistItems.csv"
     Public Property PlaylistItemsRecoveredFileName As String = "PlaylistItemsRecovered.csv"

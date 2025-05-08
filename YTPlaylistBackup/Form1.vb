@@ -9,8 +9,6 @@ Imports Google.Apis.YouTube.v3.Data
 Public Class Form1
     'reference https://stackoverflow.com/questions/65357223/get-youtube-channel-data-using-google-youtube-data-api-in-vb-net
 
-    'move to SQLite?
-
 #Region "Variables"
     Private credential As UserCredential
     Private ytService As YouTubeService
@@ -162,6 +160,11 @@ Public Class Form1
     Private Sub GetPlaylistItemLists()
         Dim playlistItemsCache As New Dictionary(Of String, String)
 
+        Dim playlistItemListClone = Database.playlistItemListData.Clone
+        Dim playlistItemListRecoveredClone = Database.playlistItemListRecoveredData.Clone
+        Dim playlistItemListRemovedClone = Database.playlistItemListRemovedData.Clone
+        Dim playlistItemListLostClone = Database.playlistItemListLostData.Clone
+
         Dim AddedCount = 0
         Dim RemovedCount = 0
         Dim RecoveredCount = 0
@@ -196,7 +199,7 @@ Public Class Form1
                         desc = "This video is unavailable." OrElse desc = "This video is private.") Then
                         If filterRow IsNot Nothing Then
                             'recovered
-                            Database.InsertSqlPlaylistItemRecoveredList(playlistId, filterRow(1), filterRow(2), filterRow(3), filterRow(4), filterRow(5))
+                            playlistItemListRecoveredClone.Rows.Add(playlistId, filterRow(1), filterRow(2), filterRow(3), filterRow(4), filterRow(5), Now)
                             Database.DeleteSqlPlaylistItem(filterRow(1), playlistId)
                             RecoveredCount += 1
                         Else
@@ -205,14 +208,14 @@ Public Class Form1
                             Dim filterRowLost = Database.playlistItemListLostData.AsEnumerable.Where(Function(dr) dr(0).ToString = playlistId AndAlso dr(1).ToString = videoId).FirstOrDefault
                             If filterRowRecover Is Nothing AndAlso filterRowLost Is Nothing Then
                                 'no backup
-                                Database.InsertSqlPlaylistItemLostList(playlistId, videoId, title, desc, videoOwnerChannelId, videoOwnerChannelTitle)
+                                playlistItemListLostClone.Rows.Add(playlistId, videoId, title, desc, videoOwnerChannelId, videoOwnerChannelTitle, Now)
                                 LostCount += 1
                             End If
                         End If
                     Else
                         If filterRow Is Nothing Then
                             'new added
-                            Database.InsertSqlPlaylistItemList(playlistId, videoId, title, desc, videoOwnerChannelId, videoOwnerChannelTitle)
+                            playlistItemListClone.Rows.Add(playlistId, videoId, title, desc, videoOwnerChannelId, videoOwnerChannelTitle, Now)
                             AddedCount += 1
                         End If
                     End If
@@ -230,7 +233,7 @@ Public Class Form1
             If filteredTable IsNot Nothing Then
                 For Each rows In filteredTable
                     If Not playlistItemsCache.ContainsKey(rows(1)) Then
-                        Database.InsertSqlPlaylistItemRemovedList(playlistId, rows(1), rows(2), rows(3), rows(4), rows(5))
+                        playlistItemListRemovedClone.Rows.Add(playlistId, rows(1), rows(2), rows(3), rows(4), rows(5), Now)
                         Database.DeleteSqlPlaylistItem(rows(1), playlistId)
                         RemovedCount += 1
                     End If
@@ -238,6 +241,11 @@ Public Class Form1
             End If
             ToolStripProgressBar1.Value += 1
         Next
+
+        Database.BulkInsertSqlPlaylistItemList(playlistItemListClone)
+        Database.BulkInsertSqlPlaylistItemListLost(playlistItemListLostClone)
+        Database.BulkInsertSqlPlaylistItemListRecovered(playlistItemListRecoveredClone)
+        Database.BulkInsertSqlPlaylistItemListRemoved(playlistItemListRemovedClone)
 
         Database.InsertSqlSyncHistory(AddedCount, RemovedCount, RecoveredCount, LostCount, "Synced")
     End Sub
@@ -404,13 +412,13 @@ Public Class Form1
 
     Private Sub ExportToCSV()
         Dim zipFileName = "ytPlaylistGalleryBak " & Now.ToString("yyyy-MM-dd_hh-mm-ss") & ".zip"
-        Dim zipFilePath = TempPath & zipFileName
-        Dim playlistFilePath = TempPath & PlaylistFileName
-        Dim playlistItemsFilePath = TempPath & PlaylistItemsFileName
-        Dim playlistItemsRecoveredFilePath = TempPath & PlaylistItemsRecoveredFileName
-        Dim playlistItemsRemovedFilePath = TempPath & PlaylistItemsRemovedFileName
-        Dim playlistItemsLostFilePath = TempPath & PlaylistItemsLostFileName
-        Dim syncHistoryFilePath = TempPath & SyncHistoryFileName
+        Dim zipFilePath = BackupPath & zipFileName
+        Dim playlistFilePath = BackupPath & PlaylistFileName
+        Dim playlistItemsFilePath = BackupPath & PlaylistItemsFileName
+        Dim playlistItemsRecoveredFilePath = BackupPath & PlaylistItemsRecoveredFileName
+        Dim playlistItemsRemovedFilePath = BackupPath & PlaylistItemsRemovedFileName
+        Dim playlistItemsLostFilePath = BackupPath & PlaylistItemsLostFileName
+        Dim syncHistoryFilePath = BackupPath & SyncHistoryFileName
         Dim csvFiles As New List(Of String) From {playlistFilePath, playlistItemsFilePath, playlistItemsRecoveredFilePath, playlistItemsRemovedFilePath, playlistItemsLostFilePath, syncHistoryFilePath}
 
         Try
@@ -484,37 +492,27 @@ Public Class Form1
             ToolStripProgressBar1.Value += 1
 
             If missingPlaylistData.Rows.Count > 0 Then
-                For Each rows In missingPlaylistData.Rows
-                    Database.InsertSqlPlaylistList(rows(0), rows(1), rows(2), rows(3))
-                Next
+                Database.BulkInsertSqlPlaylistList(missingPlaylistData)
             End If
             ToolStripProgressBar1.Value += 1
 
             If missingPlaylistItemsData.Rows.Count > 0 Then
-                For Each rows In missingPlaylistItemsData.Rows
-                    Database.InsertSqlPlaylistItemList(rows(0), rows(1), rows(2), rows(3), rows(4), rows(5))
-                Next
+                Database.BulkInsertSqlPlaylistItemList(missingPlaylistItemsData)
             End If
             ToolStripProgressBar1.Value += 1
 
             If missingPlaylistItemsRecoveredData.Rows.Count > 0 Then
-                For Each rows In missingPlaylistItemsRecoveredData.Rows
-                    Database.InsertSqlPlaylistItemRecoveredList(rows(0), rows(1), rows(2), rows(3), rows(4), rows(5))
-                Next
+                Database.BulkInsertSqlPlaylistItemListRecovered(missingPlaylistItemsRecoveredData)
             End If
             ToolStripProgressBar1.Value += 1
 
             If missingPlaylistItemsRemovedData.Rows.Count > 0 Then
-                For Each rows In missingPlaylistItemsRemovedData.Rows
-                    Database.InsertSqlPlaylistItemRemovedList(rows(0), rows(1), rows(2), rows(3), rows(4), rows(5))
-                Next
+                Database.BulkInsertSqlPlaylistItemListRemoved(missingPlaylistItemsRemovedData)
             End If
             ToolStripProgressBar1.Value += 1
 
             If missingPlaylistItemsLostData.Rows.Count > 0 Then
-                For Each rows In missingPlaylistItemsLostData.Rows
-                    Database.InsertSqlPlaylistItemLostList(rows(0), rows(1), rows(2), rows(3), rows(4), rows(5))
-                Next
+                Database.BulkInsertSqlPlaylistItemListLost(missingPlaylistItemsLostData)
             End If
             ToolStripProgressBar1.Value += 1
 
