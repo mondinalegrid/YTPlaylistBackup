@@ -512,6 +512,195 @@ Public Class Database
             End Try
         End Using
     End Sub
+
+    Public Shared Sub BulkInsertSqlPlaylistList(data As DataTable)
+        Using conn As New SQLiteConnection(SqlConn)
+            conn.Open()
+            Using t As SQLiteTransaction = conn.BeginTransaction()
+                Try
+                    For Each row As DataRow In data.Rows
+                        Using comm As SQLiteCommand = conn.CreateCommand()
+                            With comm
+                                .CommandText = "INSERT INTO Playlists (playlistID, title, description, itemCount, syncDate)" &
+                    "Values(@playlistID, @title, @description, @itemCount, @syncDate)"
+                                .CommandType = CommandType.Text
+                                .Parameters.AddWithValue("@playlistID", row(PlaylistListColumns.playlistID))
+                                .Parameters.AddWithValue("@title", row(PlaylistListColumns.title))
+                                .Parameters.AddWithValue("@description", row(PlaylistListColumns.description))
+                                .Parameters.AddWithValue("@itemCount", row(PlaylistListColumns.itemCount))
+                                .Parameters.AddWithValue("@syncDate", Now)
+                                .ExecuteNonQuery()
+                            End With
+                        End Using
+                    Next
+
+                    t.Commit()
+                Catch ex As Exception
+                    t.Rollback()
+                    MessageBox.Show(ex.Message, "Error")
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Public Shared Sub BulkInsertSqlPlaylistItemList(data As DataTable)
+        Using conn As New SQLiteConnection(SqlConn)
+            conn.Open()
+            Using t As SQLiteTransaction = conn.BeginTransaction()
+                Try
+                    For Each row As DataRow In data.Rows
+                        Using comm As SQLiteCommand = conn.CreateCommand()
+                            With comm
+                                .CommandText = "INSERT INTO PlaylistItems (playlistID, videoID, title, description, videoOwnerChannelId, videoOwnerChannelTitle, syncDate)" &
+                    "Values(@playlistID, @videoID, @title, @description, @videoOwnerChannelId, @videoOwnerChannelTitle, @syncDate)"
+                                .CommandType = CommandType.Text
+                                .Parameters.AddWithValue("@playlistID", row(PlaylistItemListColumns.playlistID))
+                                .Parameters.AddWithValue("@videoID", row(PlaylistItemListColumns.videoID))
+                                .Parameters.AddWithValue("@title", row(PlaylistItemListColumns.title))
+                                .Parameters.AddWithValue("@description", row(PlaylistItemListColumns.description))
+                                .Parameters.AddWithValue("@videoOwnerChannelId", row(PlaylistItemListColumns.videoOwnerChannelId))
+                                .Parameters.AddWithValue("@videoOwnerChannelTitle", row(PlaylistItemListColumns.videoOwnerChannelTitle))
+                                .Parameters.AddWithValue("@syncDate", Now)
+                                .ExecuteNonQuery()
+                            End With
+                        End Using
+                    Next
+
+                    t.Commit()
+                Catch ex As Exception
+                    t.Rollback()
+                    MessageBox.Show(ex.Message, "Error")
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Public Shared Sub BulkInsertSqlPlaylistItemListRecovered(data As DataTable)
+        Using conn As New SQLiteConnection(SqlConn)
+            conn.Open()
+            Using t As SQLiteTransaction = conn.BeginTransaction()
+                Try
+                    For Each row As DataRow In data.Rows
+                        Using comm As SQLiteCommand = conn.CreateCommand()
+                            With comm
+                                .CommandText = "INSERT INTO PlaylistItemsRecovered (playlistID, videoID, title, description, videoOwnerChannelId, videoOwnerChannelTitle, syncDate)" &
+                    "Values(@playlistID, @videoID, @title, @description, @videoOwnerChannelId, @videoOwnerChannelTitle, @syncDate)"
+                                .CommandType = CommandType.Text
+                                .Parameters.AddWithValue("@playlistID", row(PlaylistItemListRecoveredColumns.playlistID))
+                                .Parameters.AddWithValue("@videoID", row(PlaylistItemListRecoveredColumns.videoID))
+                                .Parameters.AddWithValue("@title", row(PlaylistItemListRecoveredColumns.title))
+                                .Parameters.AddWithValue("@description", row(PlaylistItemListRecoveredColumns.description))
+                                .Parameters.AddWithValue("@videoOwnerChannelId", row(PlaylistItemListRecoveredColumns.videoOwnerChannelId))
+                                .Parameters.AddWithValue("@videoOwnerChannelTitle", row(PlaylistItemListRecoveredColumns.videoOwnerChannelTitle))
+                                .Parameters.AddWithValue("@syncDate", Now)
+                                .ExecuteNonQuery()
+                            End With
+                        End Using
+                    Next
+
+                    t.Commit()
+                Catch ex As Exception
+                    t.Rollback()
+                    MessageBox.Show(ex.Message, "Error")
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Public Shared Sub BulkInsertSqlPlaylistItemListRemoved(data As DataTable)
+        Using conn As New SQLiteConnection(SqlConn)
+            conn.Open()
+            Using t As SQLiteTransaction = conn.BeginTransaction()
+                Try
+                    For Each row As DataRow In data.Rows
+                        Using comm As SQLiteCommand = conn.CreateCommand()
+                            With comm
+                                .CommandText = "INSERT INTO PlaylistItemsRemoved (playlistID, videoID, title, description, videoOwnerChannelId, videoOwnerChannelTitle, syncDate)" &
+                    "Values(@playlistID, @videoID, @title, @description, @videoOwnerChannelId, @videoOwnerChannelTitle, @syncDate)"
+                                .CommandType = CommandType.Text
+                                .Parameters.AddWithValue("@playlistID", row(PlaylistItemListRemovedColumns.playlistID))
+                                .Parameters.AddWithValue("@videoID", row(PlaylistItemListRemovedColumns.videoID))
+                                .Parameters.AddWithValue("@title", row(PlaylistItemListRemovedColumns.title))
+                                .Parameters.AddWithValue("@description", row(PlaylistItemListRemovedColumns.description))
+                                .Parameters.AddWithValue("@videoOwnerChannelId", row(PlaylistItemListRemovedColumns.videoOwnerChannelId))
+                                .Parameters.AddWithValue("@videoOwnerChannelTitle", row(PlaylistItemListRemovedColumns.videoOwnerChannelTitle))
+                                .Parameters.AddWithValue("@syncDate", Now)
+                                .ExecuteNonQuery()
+                            End With
+                        End Using
+                    Next
+
+                    t.Commit()
+                Catch ex As Exception
+                    t.Rollback()
+                    MessageBox.Show(ex.Message, "Error")
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Public Shared Sub BulkInsertSqlPlaylistItemListLost(data As DataTable)
+        Using conn As New SQLiteConnection(SqlConn)
+            conn.Open()
+            Using t As SQLiteTransaction = conn.BeginTransaction()
+                Try
+                    For Each row As DataRow In data.Rows
+                        Using comm As SQLiteCommand = conn.CreateCommand()
+                            With comm
+                                .CommandText = "INSERT INTO PlaylistItemsLost (playlistID, videoID, title, description, videoOwnerChannelId, videoOwnerChannelTitle, syncDate)" &
+                    "Values(@playlistID, @videoID, @title, @description, @videoOwnerChannelId, @videoOwnerChannelTitle, @syncDate)"
+                                .CommandType = CommandType.Text
+                                .Parameters.AddWithValue("@playlistID", row(PlaylistItemListLostColumns.playlistID))
+                                .Parameters.AddWithValue("@videoID", row(PlaylistItemListLostColumns.videoID))
+                                .Parameters.AddWithValue("@title", row(PlaylistItemListLostColumns.title))
+                                .Parameters.AddWithValue("@description", row(PlaylistItemListLostColumns.description))
+                                .Parameters.AddWithValue("@videoOwnerChannelId", row(PlaylistItemListLostColumns.videoOwnerChannelId))
+                                .Parameters.AddWithValue("@videoOwnerChannelTitle", row(PlaylistItemListLostColumns.videoOwnerChannelTitle))
+                                .Parameters.AddWithValue("@syncDate", Now)
+                                .ExecuteNonQuery()
+                            End With
+                        End Using
+                    Next
+
+                    t.Commit()
+                Catch ex As Exception
+                    t.Rollback()
+                    MessageBox.Show(ex.Message, "Error")
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Public Shared Sub BulkInsertSqlSyncHistory(data As DataTable)
+        Using conn As New SQLiteConnection(SqlConn)
+            conn.Open()
+            Using t As SQLiteTransaction = conn.BeginTransaction()
+                Try
+                    For Each row As DataRow In data.Rows
+                        Using comm As SQLiteCommand = conn.CreateCommand()
+                            With comm
+                                .CommandText = "INSERT INTO SyncHistory (AddedCount, RemovedCount, RecoveredCount, LostCount, Notes, syncDate)" &
+                    "Values(@AddedCount, @RemovedCount, @RecoveredCount, @LostCount, @Notes, @syncDate)"
+                                .CommandType = CommandType.Text
+                                .Parameters.AddWithValue("@AddedCount", row(SyncHistoryColumns.AddedCount))
+                                .Parameters.AddWithValue("@RemovedCount", row(SyncHistoryColumns.RemovedCount))
+                                .Parameters.AddWithValue("@RecoveredCount", row(SyncHistoryColumns.RecoveredCount))
+                                .Parameters.AddWithValue("@LostCount", row(SyncHistoryColumns.LostCount))
+                                .Parameters.AddWithValue("@Notes", row(SyncHistoryColumns.notes))
+                                .Parameters.AddWithValue("@syncDate", Now)
+                                .ExecuteNonQuery()
+                            End With
+                        End Using
+                    Next
+
+                    t.Commit()
+                Catch ex As Exception
+                    t.Rollback()
+                    MessageBox.Show(ex.Message, "Error")
+                End Try
+            End Using
+        End Using
+    End Sub
 #End Region
 
 #Region "Update"
