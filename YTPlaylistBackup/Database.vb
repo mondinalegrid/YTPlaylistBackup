@@ -734,7 +734,7 @@ Public Class Database
                 conn.Open()
                 Using comm As SQLiteCommand = conn.CreateCommand()
                     With comm
-                        .CommandText = "DELETE PlaylistItems WHERE videoID=@videoID and playlistID=@playlistID"
+                        .CommandText = "DELETE FROM PlaylistItems WHERE videoID=@videoID and playlistID=@playlistID"
                         .CommandType = CommandType.Text
                         .Parameters.AddWithValue("@videoID", videoID)
                         .Parameters.AddWithValue("@playlistID", playlistID)
@@ -755,7 +755,7 @@ Public Class Database
                 conn.Open()
                 Using comm As SQLiteCommand = conn.CreateCommand()
                     With comm
-                        .CommandText = "DELETE Playlists WHERE playlistID=@playlistID"
+                        .CommandText = "DELETE FROM Playlists WHERE playlistID=@playlistID"
                         .CommandType = CommandType.Text
                         .Parameters.AddWithValue("@playlistID", playlistID)
                         .ExecuteNonQuery()

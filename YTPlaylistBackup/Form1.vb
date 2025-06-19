@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports System.Threading
 Imports Google.Apis.Auth.OAuth2
+Imports Google.Apis.Auth.OAuth2.Responses
 Imports Google.Apis.Services
 Imports Google.Apis.Util.Store
 Imports Google.Apis.YouTube.v3
@@ -83,6 +84,25 @@ Public Class Form1
             .ClientId = ClientID,
             .ClientSecret = ClientSecret
         }
+
+        ' Check if this is likely to require browser (first time or expired)
+        Dim dataStore As New FileDataStore([GetType].ToString)
+        Dim needsBrowser As Boolean = True
+
+        Try
+            Dim existingToken = Await dataStore.GetAsync(Of TokenResponse)("user")
+            needsBrowser = (existingToken Is Nothing)
+        Catch
+            needsBrowser = True
+        End Try
+
+        If needsBrowser Then
+            MessageBox.Show("Click OK to start OAuth authentication. Your browser will open.",
+                   "OAuth Authentication",
+                   MessageBoxButtons.OK,
+                   MessageBoxIcon.Information)
+        End If
+
         credential = Await GoogleWebAuthorizationBroker.AuthorizeAsync(
            clientsercret,
            scopes,
@@ -95,6 +115,13 @@ Public Class Form1
             .HttpClientInitializer = credential,
             .ApplicationName = [GetType].ToString
         })
+
+        If needsBrowser Then
+            MessageBox.Show("OAuth authentication completed successfully!",
+                           "Success",
+                           MessageBoxButtons.OK,
+                           MessageBoxIcon.Information)
+        End If
     End Function
 
     Private Sub GetPlaylistList()
